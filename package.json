@@ -1,0 +1,26 @@
+{
+  "name": "cortex-router",
+  "version": "1.0.0",
+  "description": "Router components built for cortex using pathfinder",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndugger/cortex-router.git"
+  },
+  "author": "Nick Dugger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ndugger/cortex-router/issues"
+  },
+  "homepage": "https://github.com/ndugger/cortex-router#readme",
+  "dependencies": {
+    "cortex": "github:ndugger/cortex",
+    "pathfinder": "github:ndugger/pathfinder"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.5"
+  }
+}
