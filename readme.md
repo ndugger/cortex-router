@@ -20,7 +20,7 @@ export class Root extends Cortex.Component {
                 <Router.Route exact path='/things'>
                     Viewing Things
                 </Router.Route>
-                <Router.Route exact path='/things/{ thing_id }'>
+                <Router.Route path='/things/{ thing_id }'>
                     Viewing Specific Thing
                 </Router.Route>
             </Router.RouterContext>
