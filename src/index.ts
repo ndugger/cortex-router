@@ -54,7 +54,7 @@ export class RouterContext extends Cortex.Context<Router> {
                     });
                 }
 
-                reject(new Cortex.Context.RuntimeError(`No route exists for ${ path }`));
+                reject(new Error(`No route exists for ${ path }`));
             });
         },
 
@@ -72,7 +72,6 @@ export class RouterContext extends Cortex.Context<Router> {
  */
 export class Route extends Cortex.Component {
 
-    public exact?: boolean;
     public path?: string;
     
     protected handleComponentReady() {
@@ -86,7 +85,9 @@ export class Route extends Cortex.Component {
             return [];
         }
 
-        return [ Cortex.render(HTMLSlotElement) ];
+        return [ 
+            Cortex.createElement(HTMLSlotElement)
+        ];
     }
 
     public theme() {
