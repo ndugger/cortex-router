@@ -6,25 +6,25 @@ Declaractive Routing for Cortex
 
 ### Example
 ```typescript
-import * as Cortex from 'cortex'
-import * as Router from 'cortex-router'
+import { Component, createElement } from 'cortex'
+import { Route, RouterContext } from 'cortex-router'
 
-export class Root extends Cortex.Component {
+export class Root extends Component {
 
     public render() {
         return [
-            <Router.RouterContext>
-                <Router.Route exact path='/'>
+            <RouterContext>
+                <Route path='/'>
                     Viewing Index
-                </Router.Route>
-                <Router.Route exact path='/things'>
+                </Route>
+                <Route path='/things'>
                     Viewing Things
-                </Router.Route>
-                <Router.Route path='/things/{ thing_id }'>
+                </Route>
+                <Route path='/things/{ thing_id }'>
                     Viewing Specific Thing
-                </Router.Route>
-            </Router.RouterContext>
-        ];
+                </Route>
+            </RouterContext>
+        ]
     }
 }
 ```

@@ -1,5 +1,5 @@
-import * as Cortex from 'cortex';
-import * as Pathfinder from 'pathfinder';
+import { Component, Context, createElement } from 'cortex';
+import { Router as Pathfinder, RouterMethod } from 'pathfinder';
 
 /**
  * Interface provided to manage application navigation
@@ -13,13 +13,12 @@ interface Router {
 /**
  * Context which provides a declarative way to register application routes
  */
-export class RouterContext extends Cortex.Context<Router> {
+export class RouterContext extends Context<Router> {
     
     /**
      * Each router context gets its own instance of pathfinder's router
-     * I have yet to determine if this is good or bad yet
      */
-    private router = new Pathfinder.Router();
+    private router = new Pathfinder();
 
     /**
      * Currently active route
@@ -45,12 +44,18 @@ export class RouterContext extends Cortex.Context<Router> {
             window.history.pushState(state, document.title, path);
 
             return new Promise((resolve, reject) => {
-                const route = this.router.find(Pathfinder.RouterMethod.GET, path);
+                const route = this.router.find(RouterMethod.GET, path);
 
                 if (route) {
-                    route.resolve(component => {
-                        this.update({ route: component });
-                        resolve(component);
+                    const prevRoute = this.route;
+
+                    route.resolve((nextRoute: Route) => {
+                        this.update({ route: nextRoute }).then(() => {
+                            prevRoute.update();
+                            nextRoute.update();
+
+                            resolve();
+                        });
                     });
                 }
 
@@ -70,7 +75,7 @@ export class RouterContext extends Cortex.Context<Router> {
 /**
  * Component used to register a route with a path
  */
-export class Route extends Cortex.Component {
+export class Route extends Component {
 
     public path?: string;
     
@@ -86,7 +91,7 @@ export class Route extends Cortex.Component {
         }
 
         return [ 
-            Cortex.createElement(HTMLSlotElement)
+            createElement(HTMLSlotElement)
         ];
     }
 

@@ -1,4 +1,4 @@
-import * as Cortex from 'cortex';
+import { Component, Context } from 'cortex';
 /**
  * Interface provided to manage application navigation
  */
@@ -10,10 +10,9 @@ interface Router {
 /**
  * Context which provides a declarative way to register application routes
  */
-export declare class RouterContext extends Cortex.Context<Router> {
+export declare class RouterContext extends Context<Router> {
     /**
      * Each router context gets its own instance of pathfinder's router
-     * I have yet to determine if this is good or bad yet
      */
     private router;
     /**
@@ -28,11 +27,10 @@ export declare class RouterContext extends Cortex.Context<Router> {
 /**
  * Component used to register a route with a path
  */
-export declare class Route extends Cortex.Component {
-    exact?: boolean;
+export declare class Route extends Component {
     path?: string;
     protected handleComponentReady(): void;
-    render(): Cortex.Element<HTMLSlotElement>[];
+    render(): import("cortex").Element<HTMLSlotElement>[];
     theme(): string;
 }
 export {};

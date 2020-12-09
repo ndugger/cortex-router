@@ -1,16 +1,15 @@
-import * as Cortex from 'cortex';
-import * as Pathfinder from 'pathfinder';
+import { Component, Context, createElement } from 'cortex';
+import { Router as Pathfinder, RouterMethod } from 'pathfinder';
 /**
  * Context which provides a declarative way to register application routes
  */
-export class RouterContext extends Cortex.Context {
+export class RouterContext extends Context {
     constructor() {
         super(...arguments);
         /**
          * Each router context gets its own instance of pathfinder's router
-         * I have yet to determine if this is good or bad yet
          */
-        this.router = new Pathfinder.Router();
+        this.router = new Pathfinder();
         /**
          * Implementation of interface provided to manage application navigation
          */
@@ -27,14 +26,18 @@ export class RouterContext extends Cortex.Context {
             navigate: (path, state = {}) => {
                 window.history.pushState(state, document.title, path);
                 return new Promise((resolve, reject) => {
-                    const route = this.router.find(Pathfinder.RouterMethod.GET, path);
+                    const route = this.router.find(RouterMethod.GET, path);
                     if (route) {
-                        route.resolve(component => {
-                            this.update({ route: component });
-                            resolve(component);
+                        const prevRoute = this.route;
+                        route.resolve((nextRoute) => {
+                            this.update({ route: nextRoute }).then(() => {
+                                prevRoute.update();
+                                nextRoute.update();
+                                resolve();
+                            });
                         });
                     }
-                    reject(new Cortex.Context.RuntimeError(`No route exists for ${path}`));
+                    reject(new Error(`No route exists for ${path}`));
                 });
             },
             /**
@@ -49,7 +52,7 @@ export class RouterContext extends Cortex.Context {
 /**
  * Component used to register a route with a path
  */
-export class Route extends Cortex.Component {
+export class Route extends Component {
     handleComponentReady() {
         this.getContext(RouterContext).register(this.path, this);
     }
@@ -58,7 +61,9 @@ export class Route extends Cortex.Component {
         if (!router.matches(this)) {
             return [];
         }
-        return [Cortex.render(HTMLSlotElement)];
+        return [
+            createElement(HTMLSlotElement)
+        ];
     }
     theme() {
         return `
